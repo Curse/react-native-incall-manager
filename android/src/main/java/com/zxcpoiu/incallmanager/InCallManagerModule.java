@@ -408,7 +408,11 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
             Log.d(TAG, "stopWiredHeadsetEvent()");
             ReactContext reactContext = getReactApplicationContext();
             if (reactContext != null) {
-                reactContext.unregisterReceiver(wiredHeadsetReceiver);
+                try {
+                    reactContext.unregisterReceiver(wiredHeadsetReceiver);
+                } catch (IllegalArgumentException e) {
+                    Log.w(TAG, "stopWiredHeadsetEvent() threw an exception when unregistering receiver.");
+                }
             } else {
                 Log.d(TAG, "stopWiredHeadsetEvent() reactContext is null");
             }
@@ -445,7 +449,11 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
             Log.d(TAG, "stopNoisyAudioEvent()");
             ReactContext reactContext = getReactApplicationContext();
             if (reactContext != null) {
-                reactContext.unregisterReceiver(noisyAudioReceiver);
+                try {
+                    reactContext.unregisterReceiver(noisyAudioReceiver);
+                } catch (IllegalArgumentException e) {
+                    Log.w(TAG, "stopNoisyAudioEvent() threw an exception when unregistering receiver.");
+                }
             } else {
                 Log.d(TAG, "stopNoisyAudioEvent() reactContext is null");
             }
@@ -517,7 +525,11 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
             Log.d(TAG, "stopMediaButtonEvent()");
             ReactContext reactContext = getReactApplicationContext();
             if (reactContext != null) {
-                reactContext.unregisterReceiver(mediaButtonReceiver);
+                try {
+                    reactContext.unregisterReceiver(mediaButtonReceiver);
+                } catch (IllegalArgumentException e) {
+                    Log.w(TAG, "stopMediaButtionEvent() threw an exception when unregistering receiver.");
+                }
             } else {
                 Log.d(TAG, "stopMediaButtonEvent() reactContext is null");
             }
