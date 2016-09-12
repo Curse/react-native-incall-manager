@@ -300,7 +300,11 @@ class RNInCallManager: NSObject, AVAudioPlayerDelegate {
             if state != self.proximityIsNear {
                 NSLog("RNInCallManager.UIDeviceProximityStateDidChangeNotification(): isNear: \(state)")
                 self.proximityIsNear = state
-                self.bridge.eventDispatcher().sendDeviceEventWithName("Proximity", body: ["isNear": state])
+                if (self.bridge != nil) {
+                  if let dispatcher = self.bridge.eventDispatcher() {
+                    dispatcher.sendDeviceEventWithName("Proximity", body: ["isNear": state])
+                  }
+                }
             }
         }
         
