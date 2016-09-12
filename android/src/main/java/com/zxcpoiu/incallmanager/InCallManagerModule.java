@@ -795,7 +795,8 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
     @ReactMethod
     public void pokeScreen(int timeout) {
         //debugScreenPowerState();
-        if (!mPowerManager.isInteractive() && mWindowManager.getDefaultDisplay().getState() != Display.STATE_ON) {
+        //if (!mPowerManager.isInteractive() && mWindowManager.getDefaultDisplay().getState() != Display.STATE_ON) {
+        if (!mPokeFullLock.isHeld()) {
             Log.d(TAG, "pokeScreen()");
             if (timeout > 0) {
                 acquirePokeFullWakeLockReleaseAfter(timeout); // --- ms
@@ -1187,6 +1188,27 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
             }
         });
 
+    }
+
+    @ReactMethod
+    public void getAudioUriJS(String audioType, String fileType, Promise promise) {
+        Uri result = null;
+        if (audioType.equals("ringback")) {
+            result = getRingbackUri(fileType);
+        } else if (audioType.equals("busytone")) {
+            result = getBusytoneUri(fileType);
+        } else if (audioType.equals("ringtone")) {
+            result = getRingtoneUri(fileType);
+        }
+        try {
+            if (result != null) {
+                promise.resolve(result.toString());
+            } else {
+                promise.reject("failed");
+            }
+        } catch (Exception e) {
+            promise.reject("failed");
+        }
     }
 
     private Uri getRingtoneUri(final String _type) {
@@ -1646,13 +1668,13 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
     @Override
     public void onHostResume() {
         Log.d(TAG, "onResume()");
-        resume();
+        //resume();
     }
 
     @Override
     public void onHostPause() {
         Log.d(TAG, "onPause()");
-        pause();
+        //pause();
     }
 
     @Override
