@@ -44,6 +44,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.Throwable;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
@@ -774,6 +775,11 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
 
     private void requestAudioFocus() {
         if (!isAudioFocused) {
+            try {
+                audioManager.startBluetoothSco();
+            } catch (Throwable e) {
+                Log.e(TAG, "requestAudioFocus() - unable to start bluetooth");
+            }
             int result = audioManager.requestAudioFocus(mOnFocusChangeListener, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
             if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 Log.d(TAG, "AudioFocus granted");
@@ -788,6 +794,11 @@ public class InCallManagerModule extends ReactContextBaseJavaModule implements L
     private void releaseAudioFocus() {
         if (isAudioFocused) {
             audioManager.abandonAudioFocus(null);
+            try {
+                audioManager.stopBluetoothSco();
+            } catch (Throwable e) {
+                Log.e(TAG, "releaseAudioFocus() - unable to stop bluetooth");
+            }
             isAudioFocused = false;
         }
     }
